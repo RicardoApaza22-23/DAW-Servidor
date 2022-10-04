@@ -7,11 +7,11 @@
 </head>
 	<body>
         <?php
-        if (isset($_GET['juegos_id'])){
+        if (!isset($_GET['juegos_id'])){
             die('NO SE HA ESPECIFIDADO UN JUEGO');
         }
         $juegos_id = $_GET['juegos_id'];
-        $query = "Select * from tJuegoa where id=".$juegos_id;
+        $query = "Select * from tJuegos where id=".$juegos_id;
         $result = mysqli_query($db,$query) or die('Query error');
         $only_row = mysqli_fetch_array($result);
         echo '<h1>'.$only_row['nombre'].'</h1>';
