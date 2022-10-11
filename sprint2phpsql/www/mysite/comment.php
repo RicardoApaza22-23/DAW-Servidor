@@ -11,16 +11,20 @@
 
             $juegos_id = $_POST['juegos_id'];
             $comentario = $_POST['new_comment'];
+	    $fecha = date('Y-m-d H:i:s');
 if($comentario != ''){
-$query = "insert into tComentarios(comentarios,usuario_id,juegos_id) values('".$comentario."',NULL,'".$juegos_id."')";
+$query = "insert into tComentarios(comentarios,usuario_id,juegos_id,fecha) values('".$comentario."',NULL,'".$juegos_id."','$fecha')";
          mysqli_query($db,$query) or die('Error');
           	echo "<p>Nuevo Comentario";
            	echo mysqli_insert_id($db);
             	echo " añadido</p>";
             	echo "<a href='detail.php?juegos_id=" . $juegos_id . "'>Volver</a>";
 }else{
-echo "<script>alert('introduce comentario')</script>";
-echo "<a href=;
+
+echo "<p style='color:red'> Introduzca un comentarios</p>";
+echo "<a href='detail.php?juegos_id=" . $juegos_id . "'>Vovler</a>";
+
+
 }
 
 
