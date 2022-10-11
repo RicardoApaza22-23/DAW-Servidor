@@ -23,7 +23,8 @@
             $query2 = "select * from tComentarios where juegos_id = ". $juegos_id ; 
             $result2 = mysqli_query($db,$query2) or die('Query error');
             while($row = mysqli_fetch_array($result2)){
-                echo "<li>". $row['comentarios']. "</li>";
+                echo "<li>". $row['comentarios']."   " .$row['fecha'] . " </li>";
+		
             }
             mysqli_close($db);
         ?>
