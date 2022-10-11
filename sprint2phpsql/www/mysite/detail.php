@@ -35,7 +35,7 @@
     <p>Deja un nuevo comentario: </p>
 <form action="/comment.php" method="post">
             <textarea rows="4" cols="50" name="new_comment"></textarea><br>
-            <input type="hidden" names="juegos_id" value="<?php echo $juegos_id; ?>">
+            <input type="hidden" name="juegos_id" value="<?php echo $juegos_id; ?>">
             <input type="submit" values="Comentar">
         </form>
     
