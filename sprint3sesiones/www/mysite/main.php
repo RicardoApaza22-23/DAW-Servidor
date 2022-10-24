@@ -14,10 +14,13 @@
 		$resultado = mysqli_query($db,$query) or die("Query error");
 		//recorrer el resultadod
 		while($row = mysqli_fetch_array($resultado)){
+			echo "<a href='detail.php?juegos_id=".$row[0]."'>$row[0]</a> ";
 			echo $row[1]. " => " . $row[3]."<br>";
 }
 		mysqli_close($db);
 		?>
+<br>
+<a href ="/logout.php" > LogOut</a>
 	</body>
 </html>
 
