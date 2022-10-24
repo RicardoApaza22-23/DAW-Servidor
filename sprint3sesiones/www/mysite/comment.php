@@ -6,14 +6,19 @@
 	<body>
         <?php
 
+ 	   $db = mysqli_connect('localhost','root','1234','mysitedb') or die('FAIL');
+	session_start();
+	$userNull = 'NULL';
 
-		$db = mysqli_connect('localhost','root','1234','mysitedb') or die('FAIL');
+	if(!empty($_SESSION['user_id'])){
+		$userNull = $_SESSION['user_id'];
+}
 
             $juegos_id = $_POST['juegos_id'];
             $comentario = $_POST['new_comment'];
 	    $fecha = date('Y-m-d H:i:s');
 if($comentario != ''){
-$query = "insert into tComentarios(comentarios,usuario_id,juegos_id,fecha) values('".$comentario."',NULL,'".$juegos_id."','$fecha')";
+$query = "insert into tComentarios(comentarios,usuario_id,juegos_id,fecha) values('".$comentario."','".$userNull ."','".$juegos_id."','$fecha')";
          mysqli_query($db,$query) or die('Error');
           	echo "<p>Nuevo Comentario";
            	echo mysqli_insert_id($db);
