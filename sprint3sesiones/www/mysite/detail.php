@@ -39,6 +39,7 @@
             <input type="hidden" name="juegos_id" value="<?php echo $juegos_id; ?>">
             <input type="submit" values="Comentar">
         </form>
-    
+    <br>
+	<a href="/logout.php">LogOut</a>
 	</body>
 </html>
