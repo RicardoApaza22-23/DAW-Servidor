@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <html>
 <head>
 	<title>Conexión a base de datos</title>
@@ -7,9 +10,10 @@
 	<body>
 
 		<?php
+		
 		$db = mysqli_connect('localhost','root','1234','mysitedb') or die('FAIL');
  		?>
-		<h1>Conexión establecida</h1>
+		<h1>Conexión establecida</h1>´
 		<table border="1" id="tabla">
 			<tr>
 				<th>ID</th>
@@ -19,6 +23,7 @@
 				<th>PEGI</th>
 			</tr>
 		<?php
+			
 		//lanzar un query
 		$query = "Select * from tJuegos";
 		$resultado = mysqli_query($db,$query) or die("Query error");
@@ -33,11 +38,20 @@
 			echo "<td>".$row[4]."</td>";
 			echo "</tr>";
 }
+
 		mysqli_close($db);
+
 		?>
 		</table>
 <br>
 <a href ="/logout.php" > LogOut</a>
+
+<?php
+if(isset($_SESSION['user_id'])){
+echo '<a href ="/cambiarContrasena.html" > Cambiar Contraseña</a>';
+}
+
+?>
 	</body>
 </html>
 
