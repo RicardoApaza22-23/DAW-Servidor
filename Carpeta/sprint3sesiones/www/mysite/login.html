@@ -6,10 +6,25 @@
 </head>
 <body>
     <h1>Login</h1>
-<form action="login.php" method="post">
-<input name="email" type="text" placeholder="e-mail"><br>
-<input name="password" type="password" placeholder="Contraseña"><br>
+<form action="login.php" method="post" id="formulario">
+<input name="email" type="text" placeholder="e-mail" id="email"><br>
+<input name="password" type="password" placeholder="Contraseña" id="pass"><br>
 <input type="submit" value="Iniciar sesión">
 </form>
 </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+document.getElementById("formulario").addEventListener('submit', validarFormulario); 
+});
+function validarFormulario(){
+    var email=document.getElementById("email").value;
+
+    if(email.length == 0){
+        alert("Campo email vacio");
+        return;
+    }
+
+    this.submit();
+}
+</script>
