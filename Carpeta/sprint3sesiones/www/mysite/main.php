@@ -39,7 +39,7 @@ session_start();
 			echo "</tr>";
 }
 
-		smysqli_close($db);
+		mysqli_close($db);
 
 		?>
 		</table>
