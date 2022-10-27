@@ -1,10 +1,14 @@
 <?php
 session_start();
-$usuario = $_SESSION['nombre'];
+$usuario = $_SESSION['user_id'];
 $idjuego=$_POST['favorito'];
 $db = mysqli_connect('localhost', 'root', '1234', 'mysitedb') or die('FAIL');
 
-var_dump($_POST);
-//$query="insert into tFavoritos(idUsuario,idJuego) values('".$."')"
+$query="insert into tFavoritos(idUsuario,idJuego) values('".$usuario."', '".$idjuego."')";
+
+
+mysqli_query($db,$query) or die("FALLO EN BD");
+mysqli_close($db);
+header("Location: /favorito_added.php");
 
 ?>
