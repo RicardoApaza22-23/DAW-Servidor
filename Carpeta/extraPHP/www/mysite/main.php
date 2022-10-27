@@ -42,7 +42,7 @@ session_start();
 			echo "</tr>";
 }
 
-		//mysqli_close($db);
+		mysqli_close($db);
 
 		?>
 		</table>
@@ -59,6 +59,8 @@ session_start();
 <?php
 if(isset($_SESSION['user_id'])){
 echo '<a href ="/cambiarContrasena.html" > Cambiar Contraseña</a>';
+echo "<br>";
+echo "<a href='/favorites.php'>Favoritos</a>";
 }
 ?>
 	</body>
