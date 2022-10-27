@@ -1,0 +1,41 @@
+table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    border: 3px solid purple;
+  }
+  th, td {
+    padding: 20px;
+  }
+  html {
+    font-family: 'helvetica neue', helvetica, arial, sans-serif;
+  }
+
+  thead th, tfoot th {
+    font-family: 'Rock Salt', cursive;
+  }
+  
+  th {
+    letter-spacing: 2px;
+  }
+  
+  td {
+    letter-spacing: 1px;
+  }
+  
+  tbody td {
+    text-align: center;
+  }
+  
+  tfoot th {
+    text-align: right;
+  }
+  a:hover{
+    color:green;
+  }
+  td:hover{
+    color:red;
+  }
+  th:hover{
+    color:grey;
+  }
