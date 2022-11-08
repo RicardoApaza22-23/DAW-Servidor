@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import Tjuegos, Tcomentarios
-
-
+from django.views.decorators.csrf  import csrf_exempt
+import json
+from datetime import date
 def pagina_de_prueba(request):
 	return HttpResponse("<h1>hola</h1>")
 	#return lista
@@ -20,6 +21,7 @@ def devolver_juegos(request):
 		arrayLista.append(diccionario)
 	return JsonResponse(arrayLista,safe=False)
 
+@csrf_exempt
 def devolver_juegos_por_id(request,id_solicitado):
 	juego = Tjuegos.objects.get(id=id_solicitado)
 	comentarios = juego.tcomentarios_set.all()
@@ -38,3 +40,14 @@ def devolver_juegos_por_id(request,id_solicitado):
 		}
 	return JsonResponse(resultado, json_dumps_params={'ensure_ascii':False})
 
+@csrf_exempt
+def agregar_comentario(request,juego_id):
+	if request.method !='POST':
+		return None
+	json_peticion = json.loads(request.body)
+	comentario = Tcomentarios()
+	comentario.comentarios = json_peticion['nuevo_comentario']
+	comentario.juegos = Tjuegos.objects.get(id=juego_id)
+	comentario.fecha = date.today()
+	comentario.save()
+	return JsonResponse({"status":"ok"})
