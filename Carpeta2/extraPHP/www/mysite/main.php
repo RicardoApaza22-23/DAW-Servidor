@@ -54,11 +54,10 @@ session_start();
 <input type="submit" value="buscar">
 </form>
 
-<a href ="/logout.php" > LogOut</a>
-
 <?php
 if(isset($_SESSION['user_id'])){
 echo '<a href ="/cambiarContrasena.html" > Cambiar Contraseña</a>';
+echo '<a href ="/login.html" > LogIn</a>';
 }
 ?>
 	</body>
