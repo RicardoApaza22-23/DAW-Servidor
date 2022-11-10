@@ -1,6 +1,6 @@
 <html>
 <?php
-		$db = mysqli_connect('localhost','root','1234','mysitedb') or die('FAIL');
+		$db = mysqli_connect('172.16.0.2','root','1234','mysitedb') or die('FAIL');
  		?>
 <head>
 	<title>Conexión a base de datos</title>

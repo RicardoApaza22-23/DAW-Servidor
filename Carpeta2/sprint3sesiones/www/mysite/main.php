@@ -11,7 +11,7 @@ session_start();
 
 		<?php
 		
-		$db = mysqli_connect('localhost','root','1234','mysitedb') or die('FAIL');
+		$db = mysqli_connect('172.16.0.2','root','1234','mysitedb') or die('FAIL');
  		?>
 		<h1>Conexión establecida</h1>´
 		<table border="1" id="tabla">
