@@ -42,7 +42,7 @@ session_start();
 			echo "</tr>";
 }
 
-		//mysqli_close($db);
+		mysqli_close($db);
 
 		?>
 		</table>
