@@ -22,7 +22,7 @@ session_start();
 	$comentario = $_POST['new_comment'];
 	$fecha = date('Y-m-d H:i:s');
 	if ($comentario != '') {
-		$query = "insert into tComentarios(comentarios,usuario_id,juegos_id,fecha) values('" . $comentario . "','" . $user . "','".$userNull."','".$fecha."')";
+		$query = "insert into tComentarios(comentarios,usuario_id,juegos_id,fecha) values('" . $comentario . "','" . $user . "','".$juegos_id."','".$fecha."')";
 		mysqli_query($db, $query) or die('Error');
 		echo "<p>Nuevo Comentario";
 		echo mysqli_insert_id($db);

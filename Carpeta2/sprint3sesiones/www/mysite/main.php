@@ -30,7 +30,7 @@ session_start();
 		//recorrer el resultadod
 		while($row = mysqli_fetch_array($resultado)){
 			echo "<tr>";
-			echo "<td><a src='detail.php?juegos_id=".$row[0]."'>$row[0]</a> </td>";
+			echo "<td><a href='detail.php?juegos_id=".$row[0]."'>$row[0]</a> </td>";
 			// echo $row[1]. " => " . $row[3]."<br>";
 			echo "<td>".$row[1]."</td>";
 			echo "<td><img width='70' height='70' src='".$row[2]."'</td>";
@@ -44,11 +44,14 @@ session_start();
 		?>
 		</table>
 <br>
-<a href ="/logout.php" > LogOut</a>
+
 
 <?php
 if(isset($_SESSION['user_id'])){
 echo '<a href ="/cambiarContrasena.html" > Cambiar Contraseña</a>';
+echo '<a href ="/logout.php" > LogOut</a>';
+}else{
+echo '<a href="login.html">LogIn</a>';
 }
 ?>
 	</body>

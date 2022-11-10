@@ -19,7 +19,7 @@ session_start();
 		
 		<table border="1" id="tabla">
 			<tr>
-				<th>ID</th>
+				<th>ID123123</th>
 				<th>Juego</th>
 				<th>Foto</th>
 				<th>Categoria</th>
