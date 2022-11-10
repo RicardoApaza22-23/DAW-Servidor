@@ -57,6 +57,9 @@ session_start();
 <?php
 if(isset($_SESSION['user_id'])){
 echo '<a href ="/cambiarContrasena.html" > Cambiar Contraseña</a>';
+echo '<a href="/logout.php">LogOut</a>';
+
+}else{
 echo '<a href ="/login.html" > LogIn</a>';
 }
 ?>
