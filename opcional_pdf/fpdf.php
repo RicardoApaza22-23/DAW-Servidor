@@ -361,7 +361,17 @@ function AddPage($orientation='', $size='', $rotation=0)
 
 function Header()
 {
-	// To be implemented in your own inherited class
+	$this->Image('fotos/logo_php.png',10,8,33);
+	$this->Image('fotos/logo_ge.png',160,13,33);
+	$this->Ln(20);
+    // Arial bold 15
+    $this->SetFont('Arial','B',15);
+    // Movernos a la derecha
+    $this->Cell(55);
+    // Título
+    $this->Cell(10,20,'CERTIFICADO ACADEMICO',0);
+    // Salto de línea
+    $this->Ln(20);
 }
 
 function Footer()
