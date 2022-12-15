@@ -363,11 +363,11 @@ function Header()
 {
 	$this->Image('fotos/logo_php.png',10,8,33);
 	$this->Image('fotos/logo_ge.png',160,13,33);
-	$this->Ln(20);
+	$this->Ln(30);
     // Arial bold 15
-    $this->SetFont('Arial','B',15);
+    $this->SetFont('TIMES','B',20);
     // Movernos a la derecha
-    $this->Cell(55);
+    $this->Cell(40);
     // Título
     $this->Cell(10,20,'CERTIFICADO ACADEMICO',0);
     // Salto de línea
