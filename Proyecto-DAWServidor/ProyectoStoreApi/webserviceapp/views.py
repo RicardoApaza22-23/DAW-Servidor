@@ -21,18 +21,20 @@ def mostrarUsuarios(request):
     return JsonResponse(respuesta_final, safe=False)
 
 
-def mostrarUsuarioID(request, idUsuario):
-    usuariosID = get_object_or_404(Usuarios, pk=idUsuario)
-    respuesta_final = []
+def mostrarUsuarioID(request, id_usuario):
+    usuariosID = get_object_or_404(Usuarios, pk=id_usuario)
+    try:
+        respuesta_final = []
+    except: (KeyError, Usuarios.DoesNotExist)
 
-    respuesta = {}
-    respuesta['id'] = usuariosID.id
-    respuesta['nombre'] = usuariosID.nombre
-    respuesta['correo'] = usuariosID.correo
-    respuesta['telefono'] = usuariosID.telefono
-    respuesta['direccion'] = usuariosID.direccion
-    respuesta['edad'] = usuariosID.edad
-    respuesta['rol'] = usuariosID.rol
-    respuesta_final.append(respuesta)
-    return JsonResponse(respuesta_final,safe=False)
-    
+    else:
+        respuesta = {}
+        respuesta['id'] = usuariosID.id
+        respuesta['nombre'] = usuariosID.nombre
+        respuesta['correo'] = usuariosID.correo
+        respuesta['telefono'] = usuariosID.telefono
+        respuesta['direccion'] = usuariosID.direccion
+        respuesta['edad'] = usuariosID.edad
+        respuesta['rol'] = usuariosID.rol
+        respuesta_final.append(respuesta)
+        return JsonResponse(respuesta_final, safe=False)
