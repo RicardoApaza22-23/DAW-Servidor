@@ -20,5 +20,5 @@ from webserviceapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('usuarios', views.mostrarUsuarios),
-    path('usuarios/<int:idUsuario>', views.mostrarUsuarioID)
+    path('usuarios/<int:id_usuario>', views.mostrarUsuarioID)
 ]
