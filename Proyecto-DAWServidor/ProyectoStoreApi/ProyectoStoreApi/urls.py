@@ -18,7 +18,26 @@ from django.urls import path
 from webserviceapp import views
 
 urlpatterns = [
+    
     path('admin/', admin.site.urls),
+    
+    #usuarios -> get
+    path('usuarios/<int:id_usuario>', views.mostrarUsuarioID),
     path('usuarios', views.mostrarUsuarios),
-    path('usuarios/<int:id_usuario>', views.mostrarUsuarioID)
+    #usuarios -> post
+    path('usuarios/registrar', views.registrar),
+    
+    #productos -> get
+    path('productos',views.mostrarProductos),
+    path('productos/<int:id_producto>',views.mostrarProductoID),
+    
+    #productos -> post
+    path('productos/crear',views.crearProducto),
+    path('productos/<int:id_producto>/comentarios/crear',views.crear_comentarios_al_producto),
+    
+    #comentarios -> get
+    path('productos/comentarios', views.mostrar_comentarios),
+    path('productos/<int:id_producto>/comentarios', views.mostrarProductoID)
+    
 ]
+
