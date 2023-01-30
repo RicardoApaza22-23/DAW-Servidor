@@ -33,11 +33,14 @@ urlpatterns = [
     
     #productos -> post
     path('productos/crear',views.crearProducto),
-    path('productos/<int:id_producto>/comentarios/crear',views.crear_comentarios_al_producto),
+    
+    
+    
+    #path('productos/<int:id_producto>/comentarios/crear',views.crear_comentarios_al_producto),
     
     #comentarios -> get
-    path('productos/comentarios', views.mostrar_comentarios),
-    path('productos/<int:id_producto>/comentarios', views.mostrarProductoID)
+    #path('productos/comentarios', views.mostrar_comentarios),
+    path('productos/<int:id_prod>/comentarios', views.mostrar_comentarios_por_id)
     
 ]
 

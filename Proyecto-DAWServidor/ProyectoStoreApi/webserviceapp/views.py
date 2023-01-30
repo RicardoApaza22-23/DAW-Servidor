@@ -64,13 +64,15 @@ def registrar(request):
             
 def mostrarProductos(request):
     producto = Producto.objects.all()
-    productos = Producto
+    #productos = Producto
+    #usuario = Usuarios.objects_set.all()
+    #usuarios = producto.usuarios_set.all()
     mostrar_productos = []
     for data in producto:
         respuesta={}
         respuesta['nombre'] = data.nombre
         respuesta['estado'] = data.estado
-        respuesta['vendedor'] = 1#corregir
+        respuesta['vendedor'] = data.vendedor #1#corregir
         respuesta['estacion'] = data.estacion
         respuesta['precio'] = data.precio
         respuesta['color'] = data.color
@@ -78,43 +80,53 @@ def mostrarProductos(request):
         respuesta['categoría'] = data.categoria
         respuesta['fecha_de_subida'] = data.fecha_de_subida
         mostrar_productos.append(respuesta)
+    
     return JsonResponse(mostrar_productos, safe=False)
 
 
 def mostrarProductoID(request,id_producto):
-    productoID = get_object_or_404(Producto,pk=id_producto)
-    usuarios = Usuarios()
-    vendedor = produ
-    mostrar_productos = []
+    productoID= get_object_or_404(Producto,pk=id_producto)
+    #vendedor = Usuarios.objects.all(id= "1")
+    #mostrar_productos = []
+    usuarios = productoID.usuarios_set.all()
+    lista_usuarios = []
+    for data in usuarios:
+        diccionario = {}
+        diccionario['id'] = data.id
+        diccionario['nombre'] = data.nombre
+        lista_usuarios.append(diccionario)
+
     producto_objeto = {}
     producto_objeto["id"] = productoID.id
     producto_objeto["nombre"] = productoID.nombre
     producto_objeto["estado"] = productoID.estado
-    producto_objeto["vendedor"] = 1#corregir
+    producto_objeto["vendedor"] = lista_usuarios #vendedor['id'] #1#corregir
     producto_objeto["estacion"] = productoID.estacion
     producto_objeto["precio"] = productoID.precio
     producto_objeto["color"] = productoID.color
     producto_objeto["talla"] = productoID.talla
     producto_objeto["categoría"] = productoID.categoria
     producto_objeto["fecha_de_subida"] = productoID.fecha_de_subida
-    mostrar_productos.append(producto_objeto)
-    return JsonResponse(mostrar_productos,safe=False)
-
+    #mostrar_productos.append(producto_objeto)
+    return JsonResponse(producto_objeto,safe=False)
+    
     
 def crearProducto(request):
+    usuario = get_object_or_404(Usuarios,pk=1)
+    
     nuevo_producto = Producto()
-    nuevo_producto.nombre = "jordan 1"
+    nuevo_producto.nombre = "jordan 2"
     nuevo_producto.estado = "nuevo"
-    nuevo_producto.vendedor = 1
+    nuevo_producto.vendedor = 1#vendedor
     nuevo_producto.estacion = "primavera"
-    nuevo_producto.precio = 130.99
-    nuevo_producto.color = "negro y rojo"
-    nuevo_producto.talla = "43"
+    nuevo_producto.precio = 222
+    nuevo_producto.color = "blanco y morado"
+    nuevo_producto.talla = "22"
     nuevo_producto.categoria = "sneaker"
     nuevo_producto.fecha_de_subida = datetime.now()
     nuevo_producto.save()
     return JsonResponse({"status": "ok"})
-
+""" 
 def crear_comentarios_al_producto(request,id_producto):
     productoID = get_object_or_404(Producto, pk = id_producto)
     #esto será innecesario si se usa el id del usuario guardado en la session
@@ -127,18 +139,23 @@ def crear_comentarios_al_producto(request,id_producto):
     nuevo_comentario.fecha = datetime.now()
     nuevo_comentario.save()
     return JsonResponse({"status" : "ok"})
+  """
+def mostrar_comentarios_por_id(request,id_prod):
+    producto = Producto.objects.get(id = id_prod)
+    comentarios = Comentario.objects.get()
+    lista_comentario = []
+    for data in comentarios:
+        diccionario={}
+        diccionario['id'] = data.id
+        diccionario['comentarios'] = data.comentario
+        lista_comentario.append(diccionario)
+    resultado = {
+        'id' : producto.id,
+        'nombre' : producto.nombre,
+        'fecha' : producto.fecha_de_subida,
+        'comentario' : lista_comentario
+    }
     
-def mostrar_comentarios(request):
-    comentario = Comentario.objects.all()
-    mostrar_comentarios = []
-    for data in comentario:
-        respuesta = {}
-        respuesta['id_usuario'] = data.id_usuario
-        respuesta['id_producto'] = data.id_producto
-        respuesta['comentario'] = data.comentario
-        respuesta['valoracion'] = data.valoracion
-        respuesta['fecha'] = data.fecha
-        mostrar_comentarios.append(respuesta)
-    return JsonResponse(mostrar_comentarios,safe=False)
+    return JsonResponse(resultado,safe=False)
         
-        
+       

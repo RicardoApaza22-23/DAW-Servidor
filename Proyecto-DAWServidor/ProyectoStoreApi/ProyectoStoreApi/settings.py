@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'ProyectoStoreApi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'store',
+        'NAME': 'stitch',
 	'USER': 'root',
 	'PASSWORD': '1234',
 	'HOST': 'localhost',
