@@ -43,7 +43,8 @@ class Favoritos(models.Model):
 class Producto(models.Model):
     nombre = models.CharField(max_length=250, blank=True, null=True)
     estado = models.CharField(max_length=150, blank=True, null=True)
-    vendedor = models.CharField(max_length=250, blank=True, null=True)
+    #vendedor = models.CharField(max_length=250, blank=True, null=True)
+    vendedor = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='vendedor')
     estacion = models.CharField(max_length=150, blank=True, null=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     color = models.CharField(max_length=250, blank=True, null=True)
@@ -63,6 +64,7 @@ class Usuarios(models.Model):
     direccion = models.CharField(max_length=400)
     edad = models.IntegerField(blank=True, null=True)
     rol = models.IntegerField()
+    password = models.CharField(max_length=500)
 
     class Meta:
         managed = False
