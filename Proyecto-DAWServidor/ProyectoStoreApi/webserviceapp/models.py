@@ -89,6 +89,16 @@ class Comentario(models.Model):
         db_table = 'comentario'
 
 
+class Compra(models.Model):
+    id_comprador = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_comprador')
+    id_producto = models.ForeignKey('Producto', models.DO_NOTHING, db_column='id_producto')
+    fecha = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'compra'
+
+
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
@@ -132,6 +142,16 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+class Favoritos(models.Model):
+    id_producto = models.ForeignKey('Producto', models.DO_NOTHING, db_column='id_producto')
+    id_usuarios = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuarios')
+    fecha = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'favoritos'
 
 
 class Producto(models.Model):
