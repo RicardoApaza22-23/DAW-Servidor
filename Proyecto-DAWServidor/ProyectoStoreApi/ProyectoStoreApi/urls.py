@@ -26,7 +26,7 @@ urlpatterns = [
     path('usuarios', views.mostrarUsuarios),
     #usuarios -> post
     path('usuarios/registrar', views.registrar),
-    
+    path('usuarios/<int:id_usuario>/borrar', views.delete_user),
     #productos -> get
     path('productos',views.mostrarProductos),
     path('productos/<int:id_producto>',views.mostrarProductoID),
@@ -36,11 +36,26 @@ urlpatterns = [
     
     
     
-    #path('productos/<int:id_producto>/comentarios/crear',views.crear_comentarios_al_producto),
+    path('productos/<int:id_producto>/comentarios/crear',views.crear_comentarios_al_producto),
     
     #comentarios -> get
     #path('productos/comentarios', views.mostrar_comentarios),
-    path('productos/<int:id_prod>/comentarios', views.mostrar_comentarios_por_id)
+    path('productos/<int:id_prod>/comentarios', views.mostrar_comentarios_por_id),
     
+    #favoritos -> get
+    path('favoritos',views.mostrar_favoritos),
+    path('favoritos/<int:favorito_id>',views.mostrar_favoritoID),
+    
+    
+    #favoritos -> post
+    path('favoritos/producto/<int:producto_id>/añadir', views.añadir_favorito),
+    path('favoritos/producto/<int:producto_id>/eliminar', views.delete_favorito),
+    
+    
+    #compra -> post
+    path('compra/crear', views.crear_compra)
+    
+
+
 ]
 
