@@ -177,6 +177,8 @@ class Usuarios(models.Model):
     direccion = models.CharField(max_length=500)
     edad = models.IntegerField(blank=True, null=True)
     rol = models.IntegerField(blank=True, null=True)
+    contraseña = models.CharField(max_length=250)
+    token = models.CharField(max_length=250)
 
     class Meta:
         managed = False
