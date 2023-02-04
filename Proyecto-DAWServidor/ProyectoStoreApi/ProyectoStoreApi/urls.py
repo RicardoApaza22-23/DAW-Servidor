@@ -45,7 +45,7 @@ urlpatterns = [
     #favoritos -> get
     path('favoritos',views.mostrar_favoritos),
     path('favoritos/<int:favorito_id>',views.mostrar_favoritoID),
-    
+    path('usuario/<int:id_user>/favoritos',views.mostrar_favoritos_de_usuario),
     
     #favoritos -> post
     path('favoritos/producto/<int:producto_id>/añadir', views.añadir_favorito),
