@@ -21,7 +21,7 @@ def mostrarUsuarios(request):
         listaUsuarios['rol'] = data.rol
         
         respuesta_final.append(listaUsuarios)
-    
+        
     return JsonResponse(respuesta_final, safe=False)
     
 
@@ -43,23 +43,43 @@ def mostrarUsuarioID(request, id_usuario):
         respuesta_final.append(respuesta)
         return JsonResponse(respuesta_final, safe=False)
     
+def campo_vacio_de_usuarios(nombre,correo,telefono,direccion,edad,rol):
+    if len(nombre)  == 0 or len(correo) == 0 or len(telefono) == 0 or len(direccion) == 0 or (edad) == "" or (rol) == "":    
+        return True
+    else:
+        return False
+    
+# no funciona 
+def es_espacio(parametro):
+    return parametro.isspace()
+    
+    
 @csrf_exempt
 def registrar(request):
-    #if(request.method != 'POST'):
-    #    return None
+    if(request.method != 'POST'):
+        return None
     
     json_peticion = json.loads(request.body)
-    nuevo_usuario = Usuarios()
-    nuevo_usuario.nombre = json_peticion['nombre']
-    nuevo_usuario.correo = json_peticion['correo'] #"pruebacorreo"#json_peticion['correo']
-    nuevo_usuario.telefono = json_peticion['telefono'] #"123123123" #json_peticion['direccion'
-    nuevo_usuario.direccion = json_peticion['direccion']#"direccionprueba"
-    nuevo_usuario.edad = json_peticion['edad'] #"19" #json_peticion['edad']
-    nuevo_usuario.rol = json_peticion['rol']#"0" #json_peticion['rol']
-    #cmnuevo_usuario. = "passwordprueba" #json_peticion['password']
-    nuevo_usuario.save()
-    return JsonResponse({"status": "ok"})
-    #return JsonResponse(json_peticion['nombre'])         
+    nombre_usuario = json_peticion['nombre']
+    correo_usuario = json_peticion['correo']
+    telefono_usuario = json_peticion['telefono']
+    direccion_usuario = json_peticion['direccion']
+    edad_usuario = json_peticion['edad']
+    rol_usuario = json_peticion['rol']
+    
+    if campo_vacio_de_usuarios(nombre_usuario,correo_usuario,telefono_usuario,direccion_usuario,edad_usuario,rol_usuario) == False:
+        nuevo_usuario = Usuarios()
+        #if es_espacio(nombre_usuario):
+        nuevo_usuario.nombre = nombre_usuario
+        nuevo_usuario.correo = correo_usuario 
+        nuevo_usuario.telefono = telefono_usuario 
+        nuevo_usuario.direccion = direccion_usuario 
+        nuevo_usuario.edad = edad_usuario 
+        nuevo_usuario.rol = rol_usuario
+        
+        nuevo_usuario.save()
+        return JsonResponse({"status": "ok"})
+        
    
 @csrf_exempt            
 def delete_user(request,id_usuario):
@@ -78,7 +98,7 @@ def mostrarProductos(request):
         respuesta={}
         respuesta['nombre'] = data.nombre
         respuesta['estado'] = data.estado     
-        #usuario = Usuarios.objects.filter(producto__vendedor=1)
+        
         usuarios = Usuarios.objects.get(id = data.vendedor.id)
         diccionario = {}
         diccionario['id'] = usuarios.id
@@ -97,7 +117,6 @@ def mostrarProductos(request):
 
 def mostrarProductoID(request,id_producto):
     productos = Producto.objects.get(id = id_producto)
-
     usuario = Usuarios.objects.get(id = productos.vendedor.id)
     lista_producto = []
     diccionario = {}
@@ -123,18 +142,20 @@ def mostrarProductoID(request,id_producto):
     
 @csrf_exempt   
 def crearProducto(request):
-    usuario = get_object_or_404(Usuarios,id = 1)
     
+    json_peticion = json.loads(request.body)
+    vendedor = json_peticion['vendedor']
+    usuario = get_object_or_404(Usuarios,id = vendedor)
     nuevo_producto = Producto()
-    nuevo_producto.nombre = "jordan 3"
-    nuevo_producto.estado = "segunda mano"
-    nuevo_producto.vendedor = usuario #vendedor
-    nuevo_producto.estacion = "invierno"
-    nuevo_producto.precio = 222
-    nuevo_producto.color = "verde y morado"
-    nuevo_producto.talla = "40"
-    nuevo_producto.categoria = "sneaker"
-    nuevo_producto.fecha_de_subida = datetime.now()
+    nuevo_producto.nombre = json_peticion['nombre']
+    nuevo_producto.estado = json_peticion['estado']
+    nuevo_producto.vendedor = usuario 
+    nuevo_producto.estacion = json_peticion['estacion'] #"invierno"
+    nuevo_producto.precio = json_peticion['precio']#222
+    nuevo_producto.color = json_peticion['color']#"verde y morado"
+    nuevo_producto.talla = json_peticion['talla']#"40"
+    nuevo_producto.categoria = json_peticion['categoria']#"sneaker"
+    nuevo_producto.fecha_de_subida = json_peticion['fecha']
     nuevo_producto.save()
     return JsonResponse({"status": "ok"})
 
@@ -224,6 +245,24 @@ def mostrar_favoritoID(request, favorito_id):
     
     return JsonResponse(resultado,safe=False)
 
+
+def mostrar_favoritos_de_usuario(request, id_user):
+    usuario = get_object_or_404(Usuarios, pk = id_user)
+    favoritos = Favoritos.objects.filter(id_usuarios = usuario)
+    lista_favoritos = []
+    for data in favoritos:
+        diccionario = {}
+        diccionario['id'] = data.id
+        diccionario['id_producto'] = data.id_producto.id
+        #producto = get_object_or_404(Producto, pk = data.id_producto.id)
+        diccionario['nombre_producto'] = data.id_producto.nombre
+        diccionario['fecha'] = data.fecha
+        lista_favoritos.append(diccionario)
+    return JsonResponse(lista_favoritos,safe=False)
+    
+    
+
+
 def añadir_favorito(request,producto_id):
     producto = get_object_or_404(Producto,pk = producto_id)
     #usuario harcodeado
@@ -252,9 +291,6 @@ def mostrar_compras(request):
         diccionario['id'] = data.id 
         diccionario['fecha'] = data.fecha
         lista_compras.append(diccionario)
-    
-        
-
     return JsonResponse({"status" : "ok"})
 
 
