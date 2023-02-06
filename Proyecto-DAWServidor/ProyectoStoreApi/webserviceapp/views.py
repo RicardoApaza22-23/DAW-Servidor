@@ -19,6 +19,7 @@ def mostrarUsuarios(request):
         listaUsuarios['direccion'] = data.direccion
         listaUsuarios['edad'] = data.edad
         listaUsuarios['rol'] = data.rol
+        listaUsuarios['pass'] = data.contraseña
         
         respuesta_final.append(listaUsuarios)
         
@@ -49,7 +50,7 @@ def campo_vacio_de_usuarios(nombre,correo,telefono,direccion,edad,rol):
     else:
         return False
     
-# no funciona 
+#falta: no funciona 
 def es_espacio(parametro):
     return parametro.isspace()
     
@@ -60,27 +61,54 @@ def registrar(request):
         return None
     
     json_peticion = json.loads(request.body)
+    
     nombre_usuario = json_peticion['nombre']
     correo_usuario = json_peticion['correo']
     telefono_usuario = json_peticion['telefono']
     direccion_usuario = json_peticion['direccion']
     edad_usuario = json_peticion['edad']
     rol_usuario = json_peticion['rol']
+    #me pilla el campo vacio al hacer el hasheo
+    pass_usuario = "asdadsas"#json_peticion['password']
+    token_usuario = json_peticion['token']
     
     if campo_vacio_de_usuarios(nombre_usuario,correo_usuario,telefono_usuario,direccion_usuario,edad_usuario,rol_usuario) == False:
         nuevo_usuario = Usuarios()
-        #if es_espacio(nombre_usuario):
+        password = nuevo_usuario.set_password(pass_usuario)
         nuevo_usuario.nombre = nombre_usuario
         nuevo_usuario.correo = correo_usuario 
         nuevo_usuario.telefono = telefono_usuario 
         nuevo_usuario.direccion = direccion_usuario 
         nuevo_usuario.edad = edad_usuario 
         nuevo_usuario.rol = rol_usuario
+        nuevo_usuario.contraseña = nuevo_usuario.set_password("pass_usuario")
+        nuevo_usuario.token = token_usuario #"adas"#token_usuario
         
         nuevo_usuario.save()
         return JsonResponse({"status": "ok"})
         
-   
+@csrf_exempt
+def mod_usuario(request,id_usuario):
+    
+    json_peticion = json.loads(request.body)
+    
+    usuario = get_object_or_404(Usuarios,id=id_usuario)
+    if json_peticion['nombre'] in globals():
+        usuario.nombre = usuario.nombre
+    else:
+        usuario.nombre = json_peticion['nombre']
+    if json_peticion['correo'] in globals():
+        usuario.correo = usuario.correo
+    else:
+        usuario.correo = json_peticion['correo']
+    """
+    usuario.update(telefono = json_peticion['telefono'])
+    usuario.update(direccion = json_peticion['direccion'])
+    usuario.update(edad = json_peticion['edad'])
+    usuario.update(rol = json_peticion['rol'])
+    """
+    return JsonResponse({"status": "ok"})
+        
 @csrf_exempt            
 def delete_user(request,id_usuario):
     usuario = Usuarios.objects.get(id = id_usuario)
@@ -140,23 +168,38 @@ def mostrarProductoID(request,id_producto):
     
     return JsonResponse(resultado,safe=False)
     
+def campo_vacio_de_productos(nombre,estado,estacion,precio,color,talla,categoria,fecha):
+    if len(nombre) == 0 or len(estado) == 0 or len(estacion) == 0 or precio == "" or len(color) == 0 or talla == "" or len(categoria) == 0 or len(fecha) == 0:
+        return True
+    else:
+        return False
+    
 @csrf_exempt   
 def crearProducto(request):
     
     json_peticion = json.loads(request.body)
+    nombre = json_peticion['nombre']
+    estado = json_peticion['estado']
+    estacion = json_peticion['estacion']
+    precio = json_peticion['precio']
+    color = json_peticion['color']
+    talla = json_peticion['talla']
+    categoria = json_peticion['categoria']
+    fecha = json_peticion['fecha']
     vendedor = json_peticion['vendedor']
     usuario = get_object_or_404(Usuarios,id = vendedor)
-    nuevo_producto = Producto()
-    nuevo_producto.nombre = json_peticion['nombre']
-    nuevo_producto.estado = json_peticion['estado']
-    nuevo_producto.vendedor = usuario 
-    nuevo_producto.estacion = json_peticion['estacion'] #"invierno"
-    nuevo_producto.precio = json_peticion['precio']#222
-    nuevo_producto.color = json_peticion['color']#"verde y morado"
-    nuevo_producto.talla = json_peticion['talla']#"40"
-    nuevo_producto.categoria = json_peticion['categoria']#"sneaker"
-    nuevo_producto.fecha_de_subida = json_peticion['fecha']
-    nuevo_producto.save()
+    if campo_vacio_de_productos(nombre,estado,estacion,precio,color,talla,categoria,fecha):
+        nuevo_producto = Producto()
+        nuevo_producto.nombre = nombre
+        nuevo_producto.estado = estado
+        nuevo_producto.vendedor = usuario 
+        nuevo_producto.estacion = estacion #"invierno"
+        nuevo_producto.precio = precio#222
+        nuevo_producto.color = color #"verde y morado"
+        nuevo_producto.talla = talla  #"40"
+        nuevo_producto.categoria = categoria#"sneaker"
+        nuevo_producto.fecha_de_subida = fecha
+        nuevo_producto.save()
     return JsonResponse({"status": "ok"})
 
 @csrf_exempt  
@@ -306,4 +349,9 @@ def crear_compra(request):
     nueva_compra.fecha = datetime.now()
     nueva_compra.save()
     
+    return JsonResponse({"status" : "ok"})
+
+def eliminar_compra(request, id_compra):
+    compra = Compra.objects.get(id = id_compra)
+    compra.delete()
     return JsonResponse({"status" : "ok"})
