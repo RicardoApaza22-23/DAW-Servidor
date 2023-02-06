@@ -27,6 +27,7 @@ urlpatterns = [
     #usuarios -> post
     path('usuarios/registrar', views.registrar),
     path('usuarios/<int:id_usuario>/borrar', views.delete_user),
+    path('usuarios/<int:id_usuario>/modificar', views.mod_usuario),
     #productos -> get
     path('productos',views.mostrarProductos),
     path('productos/<int:id_producto>',views.mostrarProductoID),
