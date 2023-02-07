@@ -77,7 +77,7 @@ def login(request):
     json_peticion = json.loads(request.body)
     username = json_peticion['username']
     password = json_peticion['password']
-    password_hashed = make_password(password)
+    
     if usuario_existe_en_bd(request,username) == True:
         user = Usuarios.objects.get(nombre = username)
         if check_password(password,user.contraseña):
@@ -89,6 +89,7 @@ def login(request):
         return JsonResponse({"status" : "usuario no coincide"})
     
 @csrf_exempt
+#falta: validar cada campo
 def registrar(request):
     if(request.method != 'POST'):
         return None
@@ -115,12 +116,13 @@ def registrar(request):
         nuevo_usuario.edad = edad_usuario 
         nuevo_usuario.rol = rol_usuario
         nuevo_usuario.contraseña = pass_hash
-        nuevo_usuario.token = token_usuario #"adas"#token_usuario
+        nuevo_usuario.token = token_usuario 
         
         nuevo_usuario.save()
-        return JsonResponse({"status": "ok"})
+        return JsonResponse({"status": "usuario registrado"})
         
 @csrf_exempt
+#falta: implementar valicadiones a los cmapos
 def mod_usuario(request,id_usuario):
     
     json_peticion = json.loads(request.body)
@@ -141,7 +143,7 @@ def mod_usuario(request,id_usuario):
         usuario.rol = (json_peticion['rol'])
    
     
-    return JsonResponse({"status": "ok"})    
+    return JsonResponse({"status": "usuario creado"})    
 
         
 @csrf_exempt            
@@ -149,7 +151,7 @@ def delete_user(request,id_usuario):
     usuario = Usuarios.objects.get(id = id_usuario)
     usuario.delete()
     
-    return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "usuario eliminado"})
 
 
  
@@ -211,6 +213,7 @@ def campo_vacio_de_productos(nombre,estado,estacion,precio,color,talla,categoria
         return False
     
 @csrf_exempt   
+#falta: validar estos campos
 def crearProducto(request):
     
     json_peticion = json.loads(request.body)
@@ -229,11 +232,11 @@ def crearProducto(request):
         nuevo_producto.nombre = nombre
         nuevo_producto.estado = estado
         nuevo_producto.vendedor = usuario 
-        nuevo_producto.estacion = estacion #"invierno"
-        nuevo_producto.precio = precio#222
-        nuevo_producto.color = color #"verde y morado"
-        nuevo_producto.talla = talla  #"40"
-        nuevo_producto.categoria = categoria#"sneaker"
+        nuevo_producto.estacion = estacion 
+        nuevo_producto.precio = precio
+        nuevo_producto.color = color 
+        nuevo_producto.talla = talla  
+        nuevo_producto.categoria = categoria
         nuevo_producto.fecha_de_subida = fecha
         nuevo_producto.save()
     return JsonResponse({"status": "ok"})
@@ -242,9 +245,10 @@ def crearProducto(request):
 def delete_producto(request, producto_id):
     producto = Producto.objects.get(id = producto_id)
     producto.delete()
-    return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "producto eliminado"})
 
 @csrf_exempt  
+#falta: hacer un post en vez de ser hardocdeado
 def crear_comentarios_al_producto(request,id_producto):
     productoID = get_object_or_404(Producto, pk = id_producto)
     #esto será innecesario si se usa el id del usuario guardado en la session
@@ -320,8 +324,6 @@ def mostrar_favoritoID(request, favorito_id):
         'producto' : lista_favorito2
         
     }
-    #lista_favorito.append(resultado)
-    
     return JsonResponse(resultado,safe=False)
 
 
@@ -333,7 +335,6 @@ def mostrar_favoritos_de_usuario(request, id_user):
         diccionario = {}
         diccionario['id'] = data.id
         diccionario['id_producto'] = data.id_producto.id
-        #producto = get_object_or_404(Producto, pk = data.id_producto.id)
         diccionario['nombre_producto'] = data.id_producto.nombre
         diccionario['fecha'] = data.fecha
         lista_favoritos.append(diccionario)
@@ -341,7 +342,7 @@ def mostrar_favoritos_de_usuario(request, id_user):
     
     
 
-
+#falta(o no ): hacer un post
 def añadir_favorito(request,producto_id):
     producto = get_object_or_404(Producto,pk = producto_id)
     #usuario harcodeado
@@ -356,21 +357,22 @@ def añadir_favorito(request,producto_id):
     #error: eliminar todas los registros dependiedno del producto_id
     #posible solucin = agregar una condición más al filter y ponerle que reciba el id_producto
     #y además un usuario en concreto, para que elimine ciertos campos y no todos con el mismo producto_id
+    #otra posible solucion: hacer un post de esto y enviar todos los parametros por json para que borre solo un producto
 def delete_favorito(request,producto_id):
     favorito = Favoritos.objects.filter(id_producto = producto_id)
     favorito.delete()
     return JsonResponse({"status" : "ok"})
-
+#falta: mostrar los datos de los productos y usuarios
 def mostrar_compras(request):
     compras = Compra.objects.all()
-    #usuario = Usuarios.objects.all()
+    
     lista_compras = []
     for data in compras:
         diccionario = {}
         diccionario['id'] = data.id 
         diccionario['fecha'] = data.fecha
         lista_compras.append(diccionario)
-    return JsonResponse({"status" : "ok"})
+    return JsonResponse(lista_compras, safe=False)
 
 
 @csrf_exempt 
