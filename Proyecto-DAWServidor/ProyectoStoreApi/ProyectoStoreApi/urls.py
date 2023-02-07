@@ -20,6 +20,10 @@ from webserviceapp import views
 urlpatterns = [
     
     path('admin/', admin.site.urls),
+    #pruebas
+    path('prueba/existe', views.usuario_existe_en_bd),
+    
+    
     
     #usuarios -> get
     path('usuarios/<int:id_usuario>', views.mostrarUsuarioID),
