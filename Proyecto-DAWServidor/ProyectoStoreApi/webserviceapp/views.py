@@ -5,7 +5,7 @@ from .models import Usuarios, Producto, Comentario, Favoritos, Compra
 from django.shortcuts import render, get_object_or_404
 import json
 from datetime import datetime
-
+from django.contrib.auth.hashers import make_password
 
 def mostrarUsuarios(request):
     usuarios = Usuarios.objects.all()
@@ -49,11 +49,29 @@ def campo_vacio_de_usuarios(nombre,correo,telefono,direccion,edad,rol):
         return True
     else:
         return False
+@csrf_exempt   
+def eliminar_espacio(request):
+    #error: no funciona
+    json_peticion = json.loads(request.body)
+    campo = json_peticion['campo'].strip()
+    #campo_sin_espacio = campo.Istrip()
+    return JsonResponse({"status" : campo})
+    
+    
     
 #falta: no funciona 
 def es_espacio(parametro):
     return parametro.isspace()
-    
+
+
+def usuario_existe_en_bd(request,usuario_nombre):   
+
+    user = Usuarios.objects.get(nombre = usuario_nombre)
+    if user.DoesNotExist:
+        return True
+    else:
+        return False
+        
     
 @csrf_exempt
 def registrar(request):
@@ -61,27 +79,27 @@ def registrar(request):
         return None
     
     json_peticion = json.loads(request.body)
-    
-    nombre_usuario = json_peticion['nombre']
+    if usuario_existe_en_bd(request,json_peticion['nombre']) == False:
+        nombre_usuario = json_peticion['nombre']
     correo_usuario = json_peticion['correo']
     telefono_usuario = json_peticion['telefono']
     direccion_usuario = json_peticion['direccion']
     edad_usuario = json_peticion['edad']
     rol_usuario = json_peticion['rol']
-    #me pilla el campo vacio al hacer el hasheo
-    pass_usuario = "asdadsas"#json_peticion['password']
+    pass_usuario = json_peticion['password']
     token_usuario = json_peticion['token']
-    
+    pass_hash = make_password(pass_usuario)
     if campo_vacio_de_usuarios(nombre_usuario,correo_usuario,telefono_usuario,direccion_usuario,edad_usuario,rol_usuario) == False:
+        
         nuevo_usuario = Usuarios()
-        password = nuevo_usuario.set_password(pass_usuario)
+        
         nuevo_usuario.nombre = nombre_usuario
         nuevo_usuario.correo = correo_usuario 
         nuevo_usuario.telefono = telefono_usuario 
         nuevo_usuario.direccion = direccion_usuario 
         nuevo_usuario.edad = edad_usuario 
         nuevo_usuario.rol = rol_usuario
-        nuevo_usuario.contraseña = nuevo_usuario.set_password("pass_usuario")
+        nuevo_usuario.contraseña = pass_hash
         nuevo_usuario.token = token_usuario #"adas"#token_usuario
         
         nuevo_usuario.save()
@@ -93,21 +111,23 @@ def mod_usuario(request,id_usuario):
     json_peticion = json.loads(request.body)
     
     usuario = get_object_or_404(Usuarios,id=id_usuario)
-    if json_peticion['nombre'] in globals():
-        usuario.nombre = usuario.nombre
-    else:
+    if "nombre" in json_peticion:
         usuario.nombre = json_peticion['nombre']
-    if json_peticion['correo'] in globals():
-        usuario.correo = usuario.correo
-    else:
+        
+    if "correo" in json_peticion:
         usuario.correo = json_peticion['correo']
-    """
-    usuario.update(telefono = json_peticion['telefono'])
-    usuario.update(direccion = json_peticion['direccion'])
-    usuario.update(edad = json_peticion['edad'])
-    usuario.update(rol = json_peticion['rol'])
-    """
-    return JsonResponse({"status": "ok"})
+    if "telefono" in json_peticion:
+        usuario.telefono = (json_peticion['telefono'])
+    if "direccion" in json_peticion:
+        usuario.direccion = (json_peticion['direccion'])
+    if "edad" in json_peticion:
+        usuario.edad = (json_peticion['edad'])
+    if "rol" in json_peticion:
+        usuario.rol = (json_peticion['rol'])
+   
+    
+    return JsonResponse({"status": "ok"})    
+
         
 @csrf_exempt            
 def delete_user(request,id_usuario):
@@ -167,7 +187,8 @@ def mostrarProductoID(request,id_producto):
     }
     
     return JsonResponse(resultado,safe=False)
-    
+
+
 def campo_vacio_de_productos(nombre,estado,estacion,precio,color,talla,categoria,fecha):
     if len(nombre) == 0 or len(estado) == 0 or len(estacion) == 0 or precio == "" or len(color) == 0 or talla == "" or len(categoria) == 0 or len(fecha) == 0:
         return True
