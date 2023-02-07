@@ -58,6 +58,8 @@ urlpatterns = [
     path('favoritos/producto/<int:producto_id>/añadir', views.añadir_favorito),
     path('favoritos/producto/<int:producto_id>/eliminar', views.delete_favorito),
     
+    #compra -> get
+    path('compra/mostrar', views.mostrar_compras),
     
     #compra -> post
     path('compra/crear', views.crear_compra)
