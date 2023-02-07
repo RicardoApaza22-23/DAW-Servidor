@@ -5,7 +5,7 @@ from .models import Usuarios, Producto, Comentario, Favoritos, Compra
 from django.shortcuts import render, get_object_or_404
 import json
 from datetime import datetime
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
 
 def mostrarUsuarios(request):
     usuarios = Usuarios.objects.all()
@@ -71,9 +71,22 @@ def usuario_existe_en_bd(request,usuario_nombre):
         return True
     else:
         return False
-    
-    
 
+@csrf_exempt
+def login(request):
+    json_peticion = json.loads(request.body)
+    username = json_peticion['username']
+    password = json_peticion['password']
+    password_hashed = make_password(password)
+    if usuario_existe_en_bd(request,username) == True:
+        user = Usuarios.objects.get(nombre = username)
+        if check_password(password,user.contraseña):
+            pass
+            return JsonResponse({"status" : "login succesfully"})
+        else: 
+            return JsonResponse({"status" : "contraseña incorrecta"})
+    else:
+        return JsonResponse({"status" : "usuario no coincide"})
     
 @csrf_exempt
 def registrar(request):
