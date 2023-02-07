@@ -23,6 +23,8 @@ urlpatterns = [
     #pruebas
     path('prueba/existe', views.usuario_existe_en_bd),
     
+    #login
+    path('login',views.login),
     
     
     #usuarios -> get
