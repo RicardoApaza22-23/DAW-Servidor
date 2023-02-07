@@ -66,12 +66,14 @@ def es_espacio(parametro):
 
 def usuario_existe_en_bd(request,usuario_nombre):   
 
-    user = Usuarios.objects.get(nombre = usuario_nombre)
-    if user.DoesNotExist:
+    user_exist=Usuarios.objects.filter(nombre = usuario_nombre).exists()
+    if user_exist:
         return True
     else:
         return False
-        
+    
+    
+
     
 @csrf_exempt
 def registrar(request):
