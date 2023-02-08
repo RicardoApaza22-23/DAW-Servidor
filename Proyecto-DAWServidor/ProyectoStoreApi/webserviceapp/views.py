@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404
 import json
 from datetime import datetime
 from django.contrib.auth.hashers import make_password,check_password
+import jwt
 
 def mostrarUsuarios(request):
     usuarios = Usuarios.objects.all()
@@ -20,6 +21,7 @@ def mostrarUsuarios(request):
         listaUsuarios['edad'] = data.edad
         listaUsuarios['rol'] = data.rol
         listaUsuarios['pass'] = data.contraseña
+        listaUsuarios['token'] = data.token
         
         respuesta_final.append(listaUsuarios)
         
@@ -59,7 +61,7 @@ def eliminar_espacio(request):
     
     
     
-#falta: no funciona 
+#error: no funciona 
 def es_espacio(parametro):
     return parametro.isspace()
 
@@ -72,22 +74,29 @@ def usuario_existe_en_bd(request,usuario_nombre):
     else:
         return False
 
+
 @csrf_exempt
 def login(request):
     json_peticion = json.loads(request.body)
     username = json_peticion['username']
     password = json_peticion['password']
+    token_header = request.headers.get('Auth-Token')
     
     if usuario_existe_en_bd(request,username) == True:
         user = Usuarios.objects.get(nombre = username)
+        pass
         if check_password(password,user.contraseña):
             pass
-            return JsonResponse({"status" : "login succesfully"})
+            if user.token == token_header:
+               return JsonResponse({"status" : "login succesfully"}) 
+            else:
+                return JsonResponse({"status" : "token invalido"})
+
         else: 
             return JsonResponse({"status" : "contraseña incorrecta"})
     else:
         return JsonResponse({"status" : "usuario no coincide"})
-    
+ 
 @csrf_exempt
 #falta: validar cada campo
 def registrar(request):
@@ -97,13 +106,14 @@ def registrar(request):
     json_peticion = json.loads(request.body)
     if usuario_existe_en_bd(request,json_peticion['nombre']) == False:
         nombre_usuario = json_peticion['nombre']
-    correo_usuario = json_peticion['correo']
+    if usuario_existe_en_bd(request,json_peticion['correo']) == False:
+        correo_usuario = json_peticion['correo']
     telefono_usuario = json_peticion['telefono']
     direccion_usuario = json_peticion['direccion']
     edad_usuario = json_peticion['edad']
     rol_usuario = json_peticion['rol']
     pass_usuario = json_peticion['password']
-    token_usuario = json_peticion['token']
+    
     pass_hash = make_password(pass_usuario)
     if campo_vacio_de_usuarios(nombre_usuario,correo_usuario,telefono_usuario,direccion_usuario,edad_usuario,rol_usuario) == False:
         
@@ -116,9 +126,17 @@ def registrar(request):
         nuevo_usuario.edad = edad_usuario 
         nuevo_usuario.rol = rol_usuario
         nuevo_usuario.contraseña = pass_hash
-        nuevo_usuario.token = token_usuario 
-        
+        secret = 'secreto_word'
+        payload = {
+            'user_id':nuevo_usuario.id,
+            'username' : nuevo_usuario.nombre
+        }
+        token = jwt.encode(payload,secret,algorithm='HS256')
+        nuevo_usuario.token = token
         nuevo_usuario.save()
+        
+        
+
         return JsonResponse({"status": "usuario registrado"})
         
 @csrf_exempt
@@ -387,9 +405,12 @@ def crear_compra(request):
     nueva_compra.fecha = datetime.now()
     nueva_compra.save()
     
-    return JsonResponse({"status" : "ok"})
+    return JsonResponse({"status" : "compra creada"})
 
 def eliminar_compra(request, id_compra):
     compra = Compra.objects.get(id = id_compra)
     compra.delete()
-    return JsonResponse({"status" : "ok"})
+    return JsonResponse({"status" : "compra eliminada"})
+
+
+#falta hacer la cabecera
