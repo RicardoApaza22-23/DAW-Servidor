@@ -51,21 +51,12 @@ def campo_vacio_de_usuarios(nombre,correo,telefono,direccion,edad,rol):
         return True
     else:
         return False
-@csrf_exempt   
-def eliminar_espacio(request):
-    #error: no funciona
-    json_peticion = json.loads(request.body)
-    campo = json_peticion['campo'].strip()
-    #campo_sin_espacio = campo.Istrip()
-    return JsonResponse({"status" : campo})
     
+def campo_sin_espacio(request,campo):
+    campo_sin_espacio = campo.strip()
+    if campo_sin_espacio == 0 or campo_sin_espacio == "":
+        return True
     
-    
-#error: no funciona 
-def es_espacio(parametro):
-    return parametro.isspace()
-
-
 def usuario_existe_en_bd(request,usuario_nombre):   
 
     user_exist=Usuarios.objects.filter(nombre = usuario_nombre).exists()
