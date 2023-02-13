@@ -152,9 +152,9 @@ def mod_usuario(request,id_usuario):
         usuario.edad = (json_peticion['edad'])
     if "rol" in json_peticion:
         usuario.rol = (json_peticion['rol'])
-   
-    
-    return JsonResponse({"status": "usuario creado"})    
+
+
+    return JsonResponse({"status": "ok"})    
 
         
 @csrf_exempt            
@@ -358,7 +358,7 @@ def mostrar_favoritos_de_usuario(request, id_user):
 def añadir_favorito(request,producto_id):
     producto = get_object_or_404(Producto,pk = producto_id)
     #usuario harcodeado
-    usuarioHC = get_object_or_404(Usuarios,pk = 1)
+    usuarioHC = get_object_or_404(Usuarios,pk = 48)
     nuevo_favorito = Favoritos()
     nuevo_favorito.id_usuarios = usuarioHC
     nuevo_favorito.id_producto = producto
@@ -366,31 +366,15 @@ def añadir_favorito(request,producto_id):
     nuevo_favorito.save()
     return JsonResponse({"status":"ok"})
     
-    #error: eliminar todas los registros dependiedno del producto_id
-    #posible solucin = agregar una condición más al filter y ponerle que reciba el id_producto
-    #y además un usuario en concreto, para que elimine ciertos campos y no todos con el mismo producto_id
-    #otra posible solucion: hacer un post de esto y enviar todos los parametros por json para que borre solo un producto
+
 @csrf_exempt 
 def delete_favorito(request,producto_id):
-        
-    """
-    favorito_objeto = Favoritos.objects.get(id_producto = producto_id)
-    
-    favorito = Favoritos.objects.filter(id_producto = producto_id)
-
-    token_header = request.headers.get('Auth-Token')
+    token_header = request.headers.get("Auth-Token")
     usuario = Usuarios.objects.get(token = token_header)
-    
-    favorito.delete(id == 1 and favorito_objeto.id_usuarios == 1)
-    return JsonResponse({"status" : "ok"})
+    favorito = Favoritos.objects.get(id_producto = producto_id, id_usuarios = usuario.id)
+    favorito.delete()
+    return JsonResponse({"status" : "producto eliminado"})
 
-    if token_header == usuario:
-        return JsonResponse({"status" : "producto eliminado de favoritos"})
-    else:
-        return JsonResponse({"status" : "token inválido"})
-   
-    #favorito.delete()
-    """
 
 
 
