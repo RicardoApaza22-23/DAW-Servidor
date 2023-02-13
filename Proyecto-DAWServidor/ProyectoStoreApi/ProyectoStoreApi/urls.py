@@ -21,7 +21,7 @@ urlpatterns = [
     
     path('admin/', admin.site.urls),
     #pruebas
-    path('prueba/eliminar', views.eliminar_espacio),
+    path('prueba/validar', views.validar_nombre),
     
     #login
     path('login',views.login),
