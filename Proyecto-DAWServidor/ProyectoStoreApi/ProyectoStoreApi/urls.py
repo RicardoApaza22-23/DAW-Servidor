@@ -21,7 +21,7 @@ urlpatterns = [
     
     path('admin/', admin.site.urls),
     #pruebas
-    path('prueba/validar', views.validar_nombre),
+    #path('prueba/validar', views.validar_nombre),
     
     #login
     path('login',views.login),
@@ -40,9 +40,6 @@ urlpatterns = [
     
     #productos -> post
     path('productos/crear',views.crearProducto),
-    
-    
-    
     path('productos/<int:id_producto>/comentarios/crear',views.crear_comentarios_al_producto),
     
     #comentarios -> get
