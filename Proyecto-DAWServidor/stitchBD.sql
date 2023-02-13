@@ -203,7 +203,7 @@ CREATE TABLE `comentario` (
   KEY `id_producto` (`id_producto`),
   CONSTRAINT `comentario_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `comentario_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,8 +212,38 @@ CREATE TABLE `comentario` (
 
 LOCK TABLES `comentario` WRITE;
 /*!40000 ALTER TABLE `comentario` DISABLE KEYS */;
-INSERT INTO `comentario` VALUES (1,1,1,'2022-02-03','prueba comentario','4 estrellas'),(3,1,1,'2022-03-03','preuab comentario 2','1 estrella'),(4,2,2,'2022-01-01','pruenba 3','3 estrellas');
+INSERT INTO `comentario` VALUES (1,1,1,'2022-02-03','prueba comentario','4 estrellas'),(3,1,1,'2022-03-03','preuab comentario 2','1 estrella'),(4,2,2,'2022-01-01','pruenba 3','3 estrellas'),(5,1,1,'2023-01-31','esto es un comentario de prueba hardcodeadooooaooooasdoasdo','5');
 /*!40000 ALTER TABLE `comentario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `compra`
+--
+
+DROP TABLE IF EXISTS `compra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `compra` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_comprador` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `fecha` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_comprador` (`id_comprador`),
+  KEY `id_producto` (`id_producto`),
+  CONSTRAINT `compra_ibfk_1` FOREIGN KEY (`id_comprador`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `compra`
+--
+
+LOCK TABLES `compra` WRITE;
+/*!40000 ALTER TABLE `compra` DISABLE KEYS */;
+INSERT INTO `compra` VALUES (1,1,3,'2023-02-01'),(2,1,1,'2023-02-01'),(3,2,1,'2023-02-01');
+/*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -327,6 +357,36 @@ LOCK TABLES `django_session` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `favoritos`
+--
+
+DROP TABLE IF EXISTS `favoritos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `favoritos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_producto` int(11) NOT NULL,
+  `id_usuarios` int(11) NOT NULL,
+  `fecha` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_producto` (`id_producto`),
+  KEY `id_usuarios` (`id_usuarios`),
+  CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id`),
+  CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`id_usuarios`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `favoritos`
+--
+
+LOCK TABLES `favoritos` WRITE;
+/*!40000 ALTER TABLE `favoritos` DISABLE KEYS */;
+INSERT INTO `favoritos` VALUES (2,2,2,'2022-01-01'),(4,2,1,'2022-01-01'),(5,1,1,'2023-02-01');
+/*!40000 ALTER TABLE `favoritos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `producto`
 --
 
@@ -347,7 +407,7 @@ CREATE TABLE `producto` (
   PRIMARY KEY (`id`),
   KEY `vendedor` (`vendedor`),
   CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`vendedor`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -356,7 +416,7 @@ CREATE TABLE `producto` (
 
 LOCK TABLES `producto` WRITE;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
-INSERT INTO `producto` VALUES (1,'jordan 1','nuevos',1,'verano',222.90,'rojo','43','asdasdd','2022-02-02'),(2,'jordan 2','nuevo',2,'otoño',222.22,'blanca','23','adasdasd','2022-01-01');
+INSERT INTO `producto` VALUES (1,'jordan 1','nuevos',1,'verano',222.90,'rojo','43','asdasdd','2022-02-02'),(2,'jordan 2','nuevo',2,'otoño',222.22,'blanca','23','adasdasd','2022-01-01'),(3,'jordan 3','segunda mano',1,'invierno',222.00,'verde y morado','40','sneaker','2023-02-01'),(4,'jordan 4','nuevo',1,'verano',123.90,'rojo y verde','43','categoria prueba','2022-01-01'),(5,'jordan 5','nuevo',1,'verano',123.90,'rojo y verde','43','categoria prueba','2022-01-01');
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -375,8 +435,10 @@ CREATE TABLE `usuarios` (
   `direccion` varchar(500) NOT NULL,
   `edad` tinyint(4) DEFAULT NULL,
   `rol` tinyint(1) DEFAULT NULL,
+  `contraseña` varchar(250) NOT NULL,
+  `token` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -385,7 +447,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'ricardo','ricardo@gmail.com','834823483','calle usuario1 1',21,1),(2,'user2','user2@gmail.com','2342343432','calle user 2',22,0),(3,'asdasdasd','pruebacorreo','123123123','direccionprueba',19,0);
+INSERT INTO `usuarios` VALUES (1,'ricardo','ricardo@gmail.com','834823483','calle usuario1 1',21,1,'',''),(2,'user2','user2@gmail.com','2342343432','calle user 2',22,0,'',''),(6,'usuariosPOST','correoPOSTom','123123123','calle post 1',19,1,'',''),(7,'usuario3','usuario3@gmail.com','123123132','calle usuario3',19,0,'',''),(8,'usuario7','usuario3@gmail.com','123123132','calle usuario3',19,0,'',''),(9,'a','usuario3@gmail.com','123123132','calle usuario3',19,0,'',''),(10,'b','b','123123132','calle usuario3',19,0,'',''),(11,'b','','123123132','calle usuario3',19,0,'',''),(12,'b','','123123132','calle usuario3',19,0,'',''),(13,'b','b','123123132','calle usuario3',19,0,'',''),(14,'b','','123123132','calle usuario3',19,0,'',''),(15,'b','b','123123132','calle usuario3',19,0,'',''),(16,'b','b','123123132','calle usuario3',19,0,'',''),(17,'b','b','123123132','calle usuario3',19,0,'',''),(18,'   ','b','123123132','calle usuario3',19,0,'',''),(19,'b','b','123123132','calle usuario3',19,0,'',''),(20,'    ','b','123123132','calle usuario3',19,0,'',''),(21,'    ','b','123123132','calle usuario3',19,0,'',''),(22,'b','b','123123132','calle usuario3',19,0,'',''),(23,'   ','b','123123132','calle usuario3',19,0,'',''),(24,'b','b','123123132','calle usuario3',19,0,'',''),(25,'   ','b','123123132','calle usuario3',19,0,'',''),(26,'b','b','123123132','calle usuario3',19,0,'',''),(27,'','b','123123132','calle usuario3',19,0,'',''),(28,'b','b','123123132','calle usuario3',19,0,'',''),(29,'b','b','123123132','calle usuario3',19,0,'',''),(30,'b','b','123123132','calle usuario3',19,0,'',''),(31,'b','b','123123132','calle usuario3',19,0,'',''),(32,'','b','123123132','calle usuario3',19,0,'',''),(33,'   ','b','123123132','calle usuario3',19,0,'',''),(34,'   ','b','123123132','calle usuario3',19,0,'',''),(35,'   ','b','123123132','calle usuario3',19,0,'',''),(36,'b','b','123123132','calle usuario3',19,0,'asdas','adasda'),(37,'b','b','123123132','calle usuario3',19,0,'dasdas','adasda'),(38,'   ','b','123123132','calle usuario3',19,0,'adasd','adas'),(39,'b','b','123123132','calle usuario3',19,0,'abc123','tokenaaaaaaaaaaa'),(40,'nuevo nombre 2','nuevo nombre','123123132','calle usuario3',19,0,'abc123','tokenaaaaaaaaaaa'),(41,'b','b','123123132','calle usuario3',19,0,'abc123','tokenaaaaaaaaaaa'),(42,'b','b','123123132','calle usuario3',19,0,'1111','tokenaaaaaaaaaaa'),(43,'badasdasd','basdasasd','123123132','calle usuario3',29,0,'bcrypt_sha256$$2b$12$gTdNhjfE4I6cLUeM2zMV4e10D8vzYdnfCDoky.p0HarW.8NxvQ55u','tokenaaaaaaaaaaa'),(44,'USUARIOSNUEVO','b','123123132','calle usuario3',19,0,'bcrypt_sha256$$2b$12$kUFe/GVpBVLPpcTRHnlVC.0LDkcY4Hqw10DrOjNYoQDT/jaEp9.5m','tokenaaaaaaaaaaa'),(45,'123123ricardo','b','123123132','calle usuario3',19,0,'bcrypt_sha256$$2b$12$QWMLhHjfiW/HxBwIGf843uJRkhqb9PXr6DliD3sMVX6YktAzL.6Cq','tokenaaaaaaaaaaa'),(46,'USUARsdasdsad','b','123123132','calle usuario3',19,0,'bcrypt_sha256$$2b$12$IOPK8vujsh87A/est3Nwyut5mR/Q0GpqQbe8Bgj7a2FHAVEqUOoW.','tokenaaaaaaaaaaa'),(47,'123123ricardo123123','basdadasd@dasdsd','123123132','calle usuario3',19,0,'bcrypt_sha256$$2b$12$QmSoBskYr2CwyFiYkZaLNefb1NUYXKvKqs4ECbo.mI/6S6yG7t6bK',''),(48,'1ricardo123123','basdad@dasdsd','123123132','calle usuario3',19,0,'bcrypt_sha256$$2b$12$erEKrZwE1S.BcuW4zEfeJuWjhOniWr21CEN4OUfwVfMO9auWsvnn2','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjpudWxsLCJ1c2VybmFtZSI6IjFyaWNhcmRvMTIzMTIzIn0.GE2jYAurfdX92h-Iqvo-EcdvIHRDpbDwgG8Y308JYwo');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -398,4 +460,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-01-31 13:27:07
+-- Dump completed on 2023-02-13 22:10:24
