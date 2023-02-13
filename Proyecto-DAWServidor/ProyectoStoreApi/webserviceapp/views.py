@@ -66,6 +66,7 @@ def usuario_existe_en_bd(request,usuario_nombre):
         return False
 
 
+
 @csrf_exempt
 def login(request):
     json_peticion = json.loads(request.body)
@@ -87,7 +88,8 @@ def login(request):
             return JsonResponse({"status" : "contraseña incorrecta"})
     else:
         return JsonResponse({"status" : "usuario no coincide"})
- 
+
+        
 @csrf_exempt
 #falta: validar cada campo
 def registrar(request):
@@ -170,6 +172,7 @@ def mostrarProductos(request):
     
     for data in producto:
         respuesta={}
+        respuesta['id'] = data.id 
         respuesta['nombre'] = data.nombre
         respuesta['estado'] = data.estado     
         
@@ -367,10 +370,30 @@ def añadir_favorito(request,producto_id):
     #posible solucin = agregar una condición más al filter y ponerle que reciba el id_producto
     #y además un usuario en concreto, para que elimine ciertos campos y no todos con el mismo producto_id
     #otra posible solucion: hacer un post de esto y enviar todos los parametros por json para que borre solo un producto
+@csrf_exempt 
 def delete_favorito(request,producto_id):
+        
+    """
+    favorito_objeto = Favoritos.objects.get(id_producto = producto_id)
+    
     favorito = Favoritos.objects.filter(id_producto = producto_id)
-    favorito.delete()
+
+    token_header = request.headers.get('Auth-Token')
+    usuario = Usuarios.objects.get(token = token_header)
+    
+    favorito.delete(id == 1 and favorito_objeto.id_usuarios == 1)
     return JsonResponse({"status" : "ok"})
+
+    if token_header == usuario:
+        return JsonResponse({"status" : "producto eliminado de favoritos"})
+    else:
+        return JsonResponse({"status" : "token inválido"})
+   
+    #favorito.delete()
+    """
+
+
+
 #falta: mostrar los datos de los productos y usuarios
 def mostrar_compras(request):
     compras = Compra.objects.all()
