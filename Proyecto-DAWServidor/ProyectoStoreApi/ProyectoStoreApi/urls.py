@@ -41,6 +41,7 @@ urlpatterns = [
     #productos -> post
     path('productos/crear',views.crearProducto),
     path('productos/<int:id_producto>/comentarios/crear',views.crear_comentarios_al_producto),
+    path('productos/<int:id_producto>/eliminar', views.delete_producto),
     
     #comentarios -> get
     #path('productos/comentarios', views.mostrar_comentarios),
@@ -52,14 +53,14 @@ urlpatterns = [
     path('usuario/<int:id_user>/favoritos',views.mostrar_favoritos_de_usuario),
     
     #favoritos -> post
-    path('favoritos/producto/<int:producto_id>/añadir', views.añadir_favorito),
+    path('favoritos/producto/<int:producto_id>/anadir', views.anadir_favorito),
     path('favoritos/producto/<int:producto_id>/eliminar', views.delete_favorito),
     
     #compra -> get
     path('compra/mostrar', views.mostrar_compras),
     
     #compra -> post
-    path('compra/crear', views.crear_compra)
+    path('compra/<int:producto_id>', views.crear_compra)
     
 
 
