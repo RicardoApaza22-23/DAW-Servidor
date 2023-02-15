@@ -20,12 +20,9 @@ from webserviceapp import views
 urlpatterns = [
     
     path('admin/', admin.site.urls),
-    #pruebas
-    #path('prueba/validar', views.validar_nombre),
     
     #login
     path('login',views.login),
-    
     
     #usuarios -> get
     path('usuarios/<int:id_usuario>', views.mostrarUsuarioID),
@@ -44,7 +41,6 @@ urlpatterns = [
     path('productos/<int:id_producto>/eliminar', views.delete_producto),
     
     #comentarios -> get
-    #path('productos/comentarios', views.mostrar_comentarios),
     path('productos/<int:id_prod>/comentarios', views.mostrar_comentarios_por_id),
     
     #favoritos -> get
@@ -60,8 +56,8 @@ urlpatterns = [
     path('compra/mostrar', views.mostrar_compras),
     
     #compra -> post
-    path('compra/<int:producto_id>', views.crear_compra)
-    
+    path('compra/producto/<int:producto_id>', views.crear_compra),
+    path('compra/<int:id_compra>/eliminar',views.eliminar_compra)
 
 
 ]
