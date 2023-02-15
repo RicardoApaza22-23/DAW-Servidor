@@ -305,7 +305,7 @@ def delete_producto(request, id_producto):
     return JsonResponse({"status": "producto eliminado"})
 
 @csrf_exempt  
-#falta: hacer un post en vez de ser hardocdeado
+
 #POST: curl -X POST http://localhost:8000/productos/2/comentarios/crear -H "Auth-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjpudWxsLCJ1c2VybmFtZSI6InJpY2FyZG8ifQ.IUHsO5s8BK0oI46zzFg2aSQ-QkZgoTC_OnqefESkiiA" -d "{\"comentario\" : \"comentario por curl\", \"valoracion\" : \"5\"}"
 def crear_comentarios_al_producto(request,id_producto):
     #guardamos el producto en concreto para crearle un comentario
@@ -340,8 +340,12 @@ def mostrar_comentarios_por_id(request,id_prod):
     for data in comentarios:
         diccionario={}
         diccionario['id'] = data.id
+        #guardamos algunos datos de los usuarios que comentaron
+        usuario = Usuarios.objects.get(id = data.id_usuario.id)
+        diccionario['nombre'] = usuario.nombre
         diccionario['comentarios'] = data.comentario
         diccionario['fecha_creacion'] = data.fecha
+        
         #concatensmoa la lista
         lista_comentario.append(diccionario)
         #resultado final:
@@ -355,7 +359,7 @@ def mostrar_comentarios_por_id(request,id_prod):
     return JsonResponse(resultado,safe=False)
 
 @csrf_exempt 
-#falta(o no ): hacer un post
+
 #POST: curl -X POST http://localhost:8000/favoritos/producto/2/anadir -H "Auth-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjpudWxsLCJ1c2VybmFtZSI6InVzdWFyaW8yIn0.mjHlliE8bjaE1vHXC6YK7a3MrK-lfD_KQUSAj4srURs"
 def anadir_favorito(request,producto_id):
     #guardamos el producto en concreto a partir de la id en la url
@@ -437,23 +441,29 @@ def mostrar_favoritoID(request, favorito_id):
 #error
 
 def mostrar_favoritos_de_usuario(request, id_user):
-    """
+    
     #guardamos el usuario que coicnida con el id de la url
     usuario = Usuarios.objects.get(id = id_user)
-    #guardamos los favoritos que coincidan con id_usuarios de la tabla favoritos
-    favoritos = Favoritos.objects.get(id_usuarios = usuario)
     
+    #guardamos los favoritos que coincidan con id_usuarios de la tabla favoritos
+    favoritos = Favoritos.objects.filter(id_usuarios = id_user)
+    #favoritos2 = Favoritos.objects.get(id_usuarios = id_user)
     lista_favoritos = []
     for data in favoritos:
+        
         diccionario = {}
         diccionario['id'] = data.id
-        diccionario['id_producto'] = data.id_producto.nombre
-        diccionario['nombre_producto'] = data.id_producto.nombre
-        diccionario['fecha'] = data.fecha
+        diccionario['id_usuarios'] = usuario.id
+        diccionario['nombre_usuarios'] = usuario.nombre
+        
+        producto = Producto.objects.get(id = data.id_producto.id)
+        diccionario['id_producto'] = producto.id
+        diccionario['nombre_producto'] = producto.nombre
+        #concatenamos
         lista_favoritos.append(diccionario)
         
     return JsonResponse(lista_favoritos,safe=False)
-    """
+    
     
 
 
@@ -461,7 +471,8 @@ def mostrar_favoritos_de_usuario(request, id_user):
 
 @csrf_exempt 
 #metodo para eliminar un producto favorito que corresponde a un usuario que se le pasara por cabcera
-#POST: curl -X POST http://localhost:8000/favoritos/producto/2/eliminar -H "Auth-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjpudWxsLCJ1c2VybmFtZSI6IjFyaWNhcmRvMTIzMTIzIn0.GE2jYAurfdX92h-Iqvo-EcdvIHRDpbDwgG8Y308JYwo"
+#POST: curl -X POST http://localhost:8000/favoritos/producto/1/eliminar -H "Auth-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjpudWxsLCJ1c2VybmFtZSI6InJpY2FyZG8ifQ.IUHsO5s8BK0oI46zzFg2aSQ-QkZgoTC_OnqefESkiiA"
+
 def delete_favorito(request,producto_id):
     #guardamos el token que se pasa por cabecera    
     token_header = request.headers.get("Auth-Token")
@@ -471,16 +482,20 @@ def delete_favorito(request,producto_id):
     favorito = Favoritos.objects.get(id_producto = producto_id, id_usuarios = usuario.id)
     #funcion par aeliminar 
     favorito.delete()
-    return JsonResponse({"status" : "producto eliminado"})
+    return JsonResponse({"status" : "producto favorito eliminado"})
 
 
 
 @csrf_exempt 
-#POST: curl -X POST http://localhost:8000/compra/2 -H "Auth-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjpudWxsLCJ1c2VybmFtZSI6InJpY2FyZG8ifQ.IUHsO5s8BK0oI46zzFg2aSQ-QkZgoTC_OnqefESkiiA"
+#POST: curl -X POST http://localhost:8000/compra/producto/2 -H "Auth-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjpudWxsLCJ1c2VybmFtZSI6InJpY2FyZG8ifQ.IUHsO5s8BK0oI46zzFg2aSQ-QkZgoTC_OnqefESkiiA"
 def crear_compra(request,producto_id):
+    #recogemos el token pasado por cabecera
     token_header = request.headers.get("Auth-Token")
+    #guardamos el usuario a partir del token
     usuario = Usuarios.objects.get(token = token_header)
+    #guardamos el producto a partir del id en la url
     producto = Producto.objects.get(id = producto_id)
+    #guardamos los registros
     nueva_compra = Compra()
     nueva_compra.id_comprador = usuario
     nueva_compra.id_producto = producto
@@ -492,31 +507,37 @@ def crear_compra(request,producto_id):
 
 #falta: mostrar los datos de los productos y usuarios
 def mostrar_compras(request):
+    #reunimos todos los registros en la variable compras
     compras = Compra.objects.all()
-    
+    #inicializamos array vacio
     lista_compras = []
+    #recorremos compras para asignrales un campo a cada clave
     for data in compras:
+        #diccionario
         diccionario = {}
         diccionario['id'] = data.id 
         diccionario['fecha'] = data.fecha
+        #hallamos los usuarios y productos correspondientes para visualizar algunos valores 
         usuario = Usuarios.objects.get(id = data.id_comprador.id)
         diccionario['nombre_comprador'] = usuario.nombre
         diccionario['direccion_comprador'] = usuario.direccion
         diccionario['correo_comprado'] = usuario.correo
+        #hallamos los productos a partir de la id de la compra
         producto = Producto.objects.get(id = data.id_producto.id)
         diccionario['nombre_producto'] = producto.nombre
         diccionario['estado_producto'] = producto.estado
         diccionario['precio_comprador'] = producto.precio
+        #concatenacion
         lista_compras.append(diccionario)
     return JsonResponse(lista_compras, safe=False)
 
 
-
-
+@csrf_exempt 
+#metodo para eliminar una compra en concreto
+#POST: curl -X POST http://localhost:8000/compra/2/eliminar 
 def eliminar_compra(request, id_compra):
+    #hallamos dicha compra a partir de la id en la url
     compra = Compra.objects.get(id = id_compra)
+    #funcion para eliminar
     compra.delete()
     return JsonResponse({"status" : "compra eliminada"})
-
-
-#falta hacer la cabecera
